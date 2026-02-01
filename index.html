@@ -163,9 +163,11 @@ animation:floatUp linear infinite;
 
 <div id="musicIntro">
 <div class="intro-card">
-<h1>Harshini ❤️</h1>
+<h1>Harshini ❤️
+  <br><br>Is this you?
+</h1>
 <div class="intro-emojis">🎶 💖 ✨</div>
-<button id="playMusicBtn">▶ Play Music</button>
+<button id="playMusicBtn">▶ YES</button>
 </div>
 </div>
 
@@ -187,69 +189,82 @@ animation:floatUp linear infinite;
 <p>
 I love you ❤️  
 <br><br>
-ప్రపంచంలో ఇంతమంది అమ్మాయిలు ఉండగా…  
+I was smiling before, but now  
 <br>
-నేను నిన్నే ఎందుకు ప్రేమించాను?
+I can't stop
 </p>
 </div>
 </div>
-
 <script>
-const songs=[
-["Ee Hridayam","Ye Maaya Chesave"],
-["Aaromale","Ye Maaya Chesave"],
-["Vintunnavaa","Ye Maaya Chesave"],
-["Inthandham","Sita Ramam"],
-["Oh Sita Hey Rama","Sita Ramam"],
-["Life Of Ram","Jaanu"],
-["Adhento Gaani","Jersey"],
-["Nee Chitram Choosi","Love Story"],
-["Oosupodu","Fidaa"],
-["Beautiful Girl","Life Is Beautiful"]
+const bgMusic = document.getElementById("bgMusic");
+const musicIntro = document.getElementById("musicIntro");
+const mainContent = document.getElementById("mainContent");
+const romanticOverlay = document.getElementById("romanticOverlay");
+const noBtn = document.getElementById("noBtn");
+const container = document.getElementById("songCardsContainer");
+
+/* SONG LIST (HTML ONLY, NO BACKEND) */
+const songs = [
+  { title: "Thanu", movie: "HIT 3", file: "thanu-hit3.mp3" },
+  { title: "Preminche Premava", movie: "Nuvvu Nenu Prema", file: "preminche-premava.mp3" },
+  { title: "Manasu Maree", movie: "V", file: "manasu-maree.mp3" },
+  { title: "Vayyarala", movie: "Teenmaar", file: "vayyarala.mp3" }
 ];
 
-const bgMusic=document.getElementById("bgMusic");
-const musicIntro=document.getElementById("musicIntro");
-const mainContent=document.getElementById("mainContent");
-const romanticOverlay=document.getElementById("romanticOverlay");
-const noBtn=document.getElementById("noBtn");
-
-document.getElementById("playMusicBtn").onclick=()=>{
-bgMusic.play().catch(()=>alert("Keep MP3 in same folder"));
-musicIntro.classList.add("hidden");
-setTimeout(()=>mainContent.classList.add("visible"),1000);
-startCards();
+/* PLAY MUSIC BUTTON */
+document.getElementById("playMusicBtn").onclick = () => {
+  bgMusic.play().catch(()=>alert("MP3 must be in same folder"));
+  musicIntro.classList.add("hidden");
+  setTimeout(()=>mainContent.classList.add("visible"),1000);
+  startCards();
 };
 
-document.getElementById("yesBtn").onclick=()=>{
-romanticOverlay.classList.add("show");
+/* YES BUTTON */
+document.getElementById("yesBtn").onclick = () => {
+  romanticOverlay.classList.add("show");
 };
 
-noBtn.onmouseenter=moveNo;
+/* NO BUTTON RUN AWAY */
+noBtn.onmouseenter = () => {
+  noBtn.style.position = "fixed";
+  noBtn.style.left = Math.random()*(window.innerWidth-120)+"px";
+  noBtn.style.top = Math.random()*(window.innerHeight-60)+"px";
+};
 
-function moveNo(){
-const x=Math.random()*(window.innerWidth-120);
-const y=Math.random()*(window.innerHeight-60);
-noBtn.style.position="fixed";
-noBtn.style.left=x+"px";
-noBtn.style.top=y+"px";
-}
-
+/* FLOATING CLICKABLE SONG CARDS */
 function startCards(){
-setInterval(()=>{
-const card=document.createElement("div");
-card.className="song-card";
-const s=songs[Math.floor(Math.random()*songs.length)];
-card.innerHTML=`🎵 <b>${s[0]}</b><br><small>${s[1]}</small>`;
-card.style.left=Math.random()*(window.innerWidth-200)+"px";
-card.style.bottom="-120px";
-card.style.animationDuration=10+Math.random()*6+"s";
-document.getElementById("songCardsContainer").appendChild(card);
-setTimeout(()=>card.remove(),16000);
-},1500);
+  setInterval(()=>{
+    const s = songs[Math.floor(Math.random()*songs.length)];
+    const card = document.createElement("div");
+    card.className = "song-card";
+    card.style.pointerEvents = "auto";
+    card.style.cursor = "pointer";
+
+    card.innerHTML = `
+      🎵 <b>${s.title}</b><br>
+      <small>${s.movie}</small>
+    `;
+
+    card.style.left = Math.random()*(window.innerWidth-220)+"px";
+    card.style.bottom = "-120px";
+    card.style.animationDuration = (10 + Math.random()*6) + "s";
+
+    /* CLICK → PLAY THAT SONG */
+    card.onclick = () => {
+      bgMusic.pause();
+      bgMusic.src = s.file;
+      bgMusic.currentTime = 0;
+      bgMusic.play();
+
+      card.style.background = "#ff1493";
+      card.style.transform = "scale(1.1)";
+    };
+
+    container.appendChild(card);
+    setTimeout(()=>card.remove(),16000);
+  },1500);
 }
 </script>
-
 </body>
 </html>
 
